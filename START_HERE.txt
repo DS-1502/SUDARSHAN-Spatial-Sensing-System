@@ -1,0 +1,18 @@
+SUDARSHAN — QUICK START
+
+1. Open this folder in VS Code.
+2. Open Terminal.
+3. Run:
+
+   python -m pip install -r requirements.txt
+
+4. Run:
+
+   python -m streamlit run app.py
+
+5. Open the Local URL shown by Streamlit, normally:
+
+   http://localhost:8501
+
+For live hardware, select the actual COM port shown in the SUDARSHAN sidebar.
+Do not assume a fixed COM number.

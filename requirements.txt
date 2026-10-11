@@ -1,0 +1,5 @@
+streamlit>=1.40,<2
+plotly>=6.5,<7
+pandas>=2.0,<3
+numpy>=1.26,<3
+pyserial>=3.5,<4

@@ -8,7 +8,7 @@ The system is intended to explore applications in search-and-rescue operations, 
 
 ## Live Dashboard
 
-**Streamlit Application:** [SUDARSHAN Spatial Sensing System](https://sudarshan-spatial-sensing-system-m2drfxaqtvh9wcb7qwddsy.streamlit.app/)
+**Streamlit Application:** [SUDARSHAN Spatial Sensing System](https://sudarshan-spatial-sensing-system-syprfmbgttwbvfx3tfsnso.streamlit.app/)
 
 ## Key Features
 

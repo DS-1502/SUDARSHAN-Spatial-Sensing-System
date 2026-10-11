@@ -206,7 +206,8 @@ Explain clearly which values are live, which are manually recorded and which are
 
 ### Open the dashboard
 
-**Live dashboard:** [Launch SUDARSHAN Dashboard](ADD_PUBLIC_STREAMLIT_URL_HERE)
+**Live dashboard:** [Launch SUDARSHAN Dashboard](https://sudarshan-spatial-sensing-system-m2drfxaqtvh9wcb7qwddsy.streamlit.app/)
+
 
 > Replace the placeholder above with the final public Streamlit deployment URL once deployment is complete.
 

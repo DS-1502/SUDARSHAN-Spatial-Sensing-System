@@ -1,300 +1,171 @@
-# SUDARSHAN
+# SUDARSHAN — Spatial Sensing System
 
-**Multi-Sensor Spatial Sensing & Navigation System**
+**A Microcontroller-Based Multi-Sensor Spatial Sensing and Intelligent Navigation System**
 
-**Live Dashboard:** [Launch SUDARSHAN](https://sudarshan-spatial-sensing-system-m2drfxaqtvh9wcb7qwddsy.streamlit.app/)
+SUDARSHAN is an embedded sensing project designed to combine GPS positioning, inertial measurements, infrared temperature sensing, and radio-frequency signal detection within a unified system. The project integrates hardware-level sensing with a Python-based dashboard for sensor visualization, monitoring, and spatial analysis.
 
-*Explore the dashboard interface and its sensor visualizations. Live hardware readings require a locally connected device and a compatible acquisition workflow.*
+The system is intended to explore applications in search-and-rescue operations, disaster response, autonomous robotics, and remote inspection.
 
-SUDARSHAN is an undergraduate engineering prototype exploring how different sensing technologies can be integrated into a common framework for spatial observation, angular response analysis, and sensor-fusion-based processing. The project brings together GPS positioning, digital RF detection, infrared temperature sensing, inertial measurements, and an engineering dashboard.
+## Live Dashboard
 
-The central idea behind SUDARSHAN is to move beyond viewing sensor outputs as isolated readings and investigate how they can be recorded, compared, and represented together. The current prototype is an initial implementation of this broader concept, developed within the practical constraints of an academic engineering project.
+**Streamlit Application:** [SUDARSHAN Spatial Sensing System](https://sudarshan-spatial-sensing-system-m2drfxaqtvh9wcb7qwddsy.streamlit.app/)
 
-> **Project status:** Working academic prototype and platform for further development.
+## Key Features
 
-## What the system demonstrates
+- **GPS positioning:** Receives geographical coordinates from the NEO-6M GPS module.
+- **RF signal detection:** Uses a 433 MHz digital RF receiver to detect incoming digital signals.
+- **Inertial sensing:** Uses the MPU6050 to obtain accelerometer and gyroscope measurements.
+- **Infrared temperature sensing:** Integrates the MLX90614 for non-contact infrared temperature measurements.
+- **Dashboard visualization:** Presents sensor information through a Python-based Streamlit interface.
+- **Sensor integration:** Brings together multiple sensing modalities for a consolidated monitoring workflow.
 
-SUDARSHAN follows an acquisition-to-analysis workflow:
+## System Architecture
 
-```text
-Sensor acquisition
-       ↓
-Data validation
-       ↓
-Angular observations
-       ↓
-Sensor-specific response fields
-       ↓
-Vector representation
-       ↓
-Weighted directional analysis
-       ↓
-Resultant bearing estimate
-       ↓
-Spatial visualization
-```
+The system is organized into two primary components:
 
-The dashboard brings sensor telemetry, recorded observations, and analytical visualizations into one interface. It is designed to make the measurement process inspectable: live hardware readings, manually recorded observations, and reference/demo inputs should be clearly distinguished.
+1. **Hardware and firmware:** An Arduino Uno R3 interfaces with the GPS module, RF receiver, MPU6050, and MLX90614.
+2. **Dashboard:** A Streamlit application provides the software interface for displaying and inspecting available sensor data.
 
-The longer-term objective is to build on this foundation with better-calibrated directional measurements, improved localization methods, and experimentally validated sensor-fusion algorithms.
+The repository separates the dashboard, documentation, and firmware directory to make future development and integration easier to manage.
 
-## Dashboard workspaces
+## Hardware Components
 
-### 01 — Field
+| Component | Purpose |
+|---|---|
+| Arduino Uno R3 | Main microcontroller |
+| NEO-6M GPS module | Geographical positioning |
+| 433 MHz digital RF receiver | Digital RF signal detection |
+| MPU6050 | Accelerometer and gyroscope measurements |
+| MLX90614 | Non-contact infrared temperature sensing |
+| Jumper wires and supporting connections | Hardware interconnection |
 
-The main spatial overview workspace.
+## Hardware Connections
 
-- Live GPS position when a valid fix is available.
-- Clearly labelled reference position when live GPS is unavailable.
-- Position history and configurable reference waypoint.
-- Directional result visualization and scan-radius controls.
-- Compact GPS, RF, thermal, IMU, and scan status.
+The following table summarizes the current Arduino Uno R3 pin assignments.
 
-The map represents the sensing unit's position when GPS is available. Any estimated source region is an analytical result and should not be interpreted as a verified target coordinate without suitable localization measurements.
-
-### 02 — Sensor Field
-
-An instrumentation-oriented view of angular observations.
-
-**RF angular detection**
-
-- Uses the receiver's digital `DATA` state.
-- Displays HIGH/LOW detection evidence associated with recorded scan angles.
-- Does **not** claim analog RSSI, dBm, or direct source distance.
-
-**Thermal response**
-
-- Uses MLX90614 object and ambient temperature when the sensor is connected and operating.
-- Derives `ΔT = object temperature − ambient temperature`.
-- Displays the measured thermal response associated with recorded scan angles.
-
-The observation-capture workflow supports manual scanning through known angles when automatic mechanical scanning is unavailable. The reliability of a directional interpretation depends on the sensing arrangement and experimental validation.
-
-### 03 — Vector Fusion
-
-The analytical workspace for examining directional observations.
-
-- North-up directional frame.
-- RF observation vector.
-- Thermal response vector.
-- Resultant vector.
-- Angular separation and sensor contribution.
-- Angular coverage and observation quality.
-- Spatial estimate visualization.
-
-The vector framework provides a way to represent and compare observations. Its output depends on the validity, calibration, and weighting of the underlying measurements.
-
-A digital RF HIGH/LOW state is not an analog signal-strength measurement, and temperature difference is not automatically a measure of distance or source direction.
-
-### 04 — System
-
-The engineering and diagnostics workspace.
-
-- Serial acquisition state.
-- Packet count and packet age, where available.
-- Invalid-frame count.
-- Hardware topology and interface/pin map.
-- Current telemetry.
-- I²C commissioning references.
-
-This workspace supports testing and troubleshooting by making communication state and sensor availability visible.
-
-## Hardware interface
-
-The prototype is built around an **Arduino Uno R3**. The following table documents the confirmed pin mapping for the MPU6050, NEO-6M GPS module, and 433 MHz RF receiver, along with the documented I²C connection for the MLX90614.
-
-| Device | Signal | Arduino Uno R3 connection |
+| Module | Module Pin | Arduino Uno R3 |
 |---|---|---|
-| 433 MHz RF receiver | VCC | 5V |
-| 433 MHz RF receiver | GND | GND |
 | 433 MHz RF receiver | DATA | D2 |
 | 433 MHz RF receiver | ADD | GND |
-| NEO-6M GPS | VCC | 5V, if supported by the module |
-| NEO-6M GPS | GND | GND |
 | NEO-6M GPS | TX | D4 |
 | NEO-6M GPS | RX | D3 |
-| MPU6050 | VCC | 5V or 3.3V, according to the breakout-board specifications |
-| MPU6050 | GND | GND |
 | MPU6050 | SDA | A4 |
 | MPU6050 | SCL | A5 |
 | MLX90614 | SDA | A4 |
 | MLX90614 | SCL | A5 |
 
-The MPU6050 and MLX90614 share the I²C bus in parallel. Both use A4 (SDA) and A5 (SCL) on the Arduino Uno R3, while each device retains its own I²C address.
+**Connection notes:**
+- The MPU6050 and MLX90614 share the I²C bus through A4 (SDA) and A5 (SCL).
+- GPS TX and RX connections are crossed: module TX connects to Arduino RX, and module RX connects to Arduino TX.
+- Confirm the supply-voltage requirements and logic-level compatibility of each module before powering the circuit.
+- The RF receiver's ADD pin should be connected as specified in the module's configuration and wiring requirements.
 
-**Hardware notes**
-
-- The RF receiver's `ADD` pin is connected to Arduino GND, as used in the prototype.
-- The GPS module's TX connects to Arduino D4, while its RX connects to D3. The firmware must configure these pins accordingly.
-- Verify the power requirements of each breakout board before supplying 5V.
-- The SG90 servo is listed as optional in the bill of materials. Its connection is not included in the confirmed pin mapping above.
-- The MLX90614's documented I²C connection is shown above; its power connection should be verified against the actual sensor breakout board.
-
-See [`hardware/README.md`](hardware/README.md) for detailed wiring and power notes, and [`hardware/BOM.md`](hardware/BOM.md) for the bill of materials and estimated costs.
-
-## RF data limitation
-
-The installed 433 MHz receiver exposes a **digital DATA output**, not an analog RSSI output. The dashboard therefore represents the receiver's digital detection state:
-
-```text
-DATA = HIGH  → digital detection evidence
-DATA = LOW   → no digital detection at that moment
-```
-
-A LOW state does not prove that no transmitter is present; detection depends on the signal, receiver, and operating conditions. The software must not invent dBm, RSSI, or analog signal-strength values.
-
-## Thermal measurement
-
-The MLX90614 provides object and ambient temperature readings. The dashboard can derive:
-
-```text
-ΔT = T_object − T_ambient
-```
-
-This is a temperature response, not a direct distance measurement. The MLX90614 is a non-contact temperature sensor rather than a thermal imaging camera, so it does not produce a spatial thermal image of the environment.
-
-If the MLX90614 is unavailable during a test, any alternative value must be labelled clearly as a proxy or demonstration input rather than a live MLX90614 measurement.
-
-## Position, direction, and source estimation
-
-GPS provides the geographical position of the sensing unit. It does not independently determine the coordinates of a separate object or radio source.
-
-The current RF receiver detects compatible digital transmissions but does not, by itself, provide calibrated signal strength, range, or reliable directional localization. The MPU6050 measures acceleration and angular velocity but does not provide absolute compass heading. Recorded scan angles can organize observations, but accurate geographical bearing requires a validated directional sensing arrangement and reliable heading reference.
-
-For this reason, SUDARSHAN's current spatial and vector outputs should be understood as a framework for directional observation and analysis. Establishing the precise location of an external source is a further development objective requiring suitable measurements and validation.
-
-## Manual/reference acquisition
-
-The dashboard supports manual or reference acquisition for prototype testing, including cases such as:
-
-- GPS fix unavailable during indoor testing.
-- Manual angular scanning.
-- Controlled reference-coordinate demonstrations.
-- Validation of visualization and processing workflows.
-
-Reference observations should remain explicitly labelled and separate from live hardware telemetry. This allows the dashboard to be demonstrated and tested without confusing reference inputs with measurements from connected sensors.
-
-## Local setup
-
-### Requirements
-
-- Python 3.10 or later.
-- USB serial access for local live-hardware acquisition.
-- Arduino and sensor hardware connected as documented.
-- Serial data format compatible with the dashboard parser.
-
-### Install
-
-From the project root:
-
-```powershell
-python -m pip install -r requirements.txt
-```
-
-### Run
-
-```powershell
-python -m streamlit run app.py
-```
-
-The terminal will provide a local URL such as:
-
-```text
-http://localhost:8501
-```
-
-Keep the terminal running while using the dashboard. Close Arduino Serial Monitor or Serial Plotter before connecting the dashboard to the same COM port, because a serial port generally cannot be used by both applications at the same time.
-
-## Data handling and validation
-
-The dashboard is intended to distinguish valid measurements from unavailable, malformed, or reference data. Sensor readings should only be described as live when they originate from connected hardware. GPS validity, sensor availability, packet age, and parsing errors are important signals when evaluating the prototype.
-
-For reproducible testing, future iterations should record timestamped sensor readings, scan angles, acquisition mode, and processing outputs so results can be compared across repeated trials.
-
-See [`VALIDATION.md`](VALIDATION.md) for the current validation notes.
-
-## Demonstration workflow
-
-For an academic or project demonstration:
-
-1. Open **Field** and show the live GPS position or clearly labelled reference position.
-2. Open **Sensor Field**.
-3. Rotate the sensor assembly through known angles using the available manual scanning method.
-4. Record the actual RF DATA state and thermal readings at each angle.
-5. Show how the RF detection field and thermal response field build from the observations.
-6. Open **Vector Fusion** and explain how recorded observations are represented and combined.
-7. Return to **Field** to review the spatial visualization and any resulting bearing estimate.
-8. Use **System** to discuss hardware connections, serial communication, and diagnostics.
-
-Explain clearly which values are live, which are manually recorded, and which are reference/demo values.
-
-## Cloud deployment and live dashboard
-
-### Open the dashboard
-
-**Live dashboard:** [Launch SUDARSHAN Dashboard](https://sudarshan-spatial-sensing-system-m2drfxaqtvh9wcb7qwddsy.streamlit.app/)
-
-A hosted dashboard provides an easy way for others to explore the interface and its supported reference/manual workflows. However, a cloud-hosted Streamlit application cannot directly access a USB COM port connected to a visitor's own computer.
-
-- **Local deployment:** Can communicate with hardware connected to the computer running the application, subject to the correct serial configuration.
-- **Cloud deployment:** Can display the dashboard and support available reference/manual workflows.
-- **Remote live hardware:** Requires a separate network-connected acquisition service or another secure method of forwarding telemetry to the hosted application.
-
-Do not describe the public cloud page as directly reading sensors connected to a visitor's laptop unless that communication path has actually been implemented and tested.
-
-## Project structure
+## Repository Structure
 
 ```text
 SUDARSHAN-Spatial-Sensing-System/
-├── hardware/
-│   ├── README.md
-│   └── BOM.md
-├── SUDARSHAN REPORT/
-├── app.py
-├── requirements.txt
-├── README.md
-├── VALIDATION.md
-├── START_HERE.txt
+├── dashboard/
+│   ├── dashboard.py
+│   └── requirements.txt
+├── docs/
+│   └── abstract.pdf
+├── firmware/
+│   └── .keep
 ├── .gitignore
-└── LICENSE
+├── LICENSE
+└── README.md
 ```
 
-The Arduino firmware should be added to a dedicated `firmware/` directory when the sketch is ready to be published. Until then, the repository should not imply that the firmware source is already included.
+### Directory Overview
 
-## Design principles
+| Path | Description |
+|---|---|
+| `dashboard/dashboard.py` | Main Streamlit dashboard application |
+| `dashboard/requirements.txt` | Python dependencies required by the dashboard |
+| `docs/abstract.pdf` | Project abstract and supporting documentation |
+| `firmware/` | Directory reserved for firmware source files |
+| `.gitignore` | Specifies files excluded from version control |
+| `LICENSE` | Project licensing information |
+| `README.md` | Project overview, setup instructions, and documentation |
 
-- Engineering-first visual hierarchy.
-- Actual measurements over fabricated live telemetry.
-- Digital RF evidence instead of invented RSSI.
-- Explicit live, manual, and reference states.
-- Clear handling of missing or stale sensor data.
-- Reproducible angular observations.
-- Consistent north-up bearing convention.
-- Estimated spatial region rather than unsupported exact coordinates.
-- Modular architecture intended for further validation and extension.
+## Software Requirements
 
-## Future scope
+- Python 3.9 or a compatible version supported by the dependencies
+- pip
+- Git
+- The Python packages listed in `dashboard/requirements.txt`
 
-SUDARSHAN is intended as a foundation that can be extended as additional hardware, time, and experimental resources become available. Potential improvements include:
+## Installation and Setup
 
-- Directional RF hardware and calibrated signal-strength measurements.
-- Thermal imaging for spatial temperature visualization.
-- Reliable absolute-heading measurements.
-- Appropriate ranging or localization methods for estimating an external source's position.
-- More consistent serial acquisition and lower-latency dashboard updates.
-- Automated scanning and repeatable measurement procedures.
-- Data logging, uncertainty estimation, and systematic performance testing.
-- More compact hardware integration and improved power management.
-- Publication of the Arduino firmware, serial protocol, and repeatable setup instructions.
+### 1. Clone the repository
 
-These improvements would allow the system to progress from a multi-sensor integration prototype toward a more thoroughly validated spatial sensing platform.
+```bash
+git clone https://github.com/DS-1502/SUDARSHAN-Spatial-Sensing-System.git
+cd SUDARSHAN-Spatial-Sensing-System
+```
 
-## Team
+### 2. Create a virtual environment
 
-**Tannishtha Gupta · Dhvan Shah**
+```bash
+python -m venv .venv
+```
 
-Student engineering prototype.
+Activate it on Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+On Linux or macOS:
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install the dashboard dependencies
+
+```bash
+pip install -r dashboard/requirements.txt
+```
+
+### 4. Run the dashboard
+
+```bash
+streamlit run dashboard/dashboard.py
+```
+
+Streamlit will provide a local URL in the terminal. Open that URL in a browser to access the dashboard.
+
+## Development Status
+
+The repository currently contains the dashboard application, its dependency list, project documentation, and a firmware directory reserved for embedded code.
+
+The actual availability of live hardware data depends on the implemented data-acquisition and communication workflow. Dashboard visualizations should not be interpreted as live hardware measurements unless the relevant hardware or data source is connected and operating.
+
+## Potential Applications
+
+- Search-and-rescue support
+- Disaster-response monitoring
+- Autonomous robotics research
+- Remote industrial inspection
+- Embedded systems and multi-sensor integration experiments
+
+These are intended application areas; operational deployment would require further validation, testing, and system-level integration.
+
+## Future Scope
+
+- Add and maintain the Arduino firmware within `firmware/`.
+- Establish a documented data-transfer interface between the hardware and dashboard.
+- Improve sensor calibration and validation.
+- Add sensor-fusion and spatial-analysis capabilities where supported by measured data.
+- Expand logging, error handling, and testing for reliable operation.
+
+## Contributors
+**Tannishtha Gupta .  Dhvan Shah**
+**SUDARSHAN Spatial Sensing System**  
+
+Developed as an embedded systems and multi-sensor integration project.
 
 ## License
 
-MIT License. See [`LICENSE`](LICENSE).
+Refer to the [`LICENSE`](LICENSE) file in this repository for the applicable licensing terms.

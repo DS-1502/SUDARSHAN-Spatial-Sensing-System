@@ -2,6 +2,10 @@
 
 **Multi-Sensor Spatial Sensing & Navigation System**
 
+**Live Dashboard:** [Launch SUDARSHAN](https://sudarshan-spatial-sensing-system-m2drfxaqtvh9wcb7qwddsy.streamlit.app/)
+
+*Explore the dashboard interface and its sensor visualizations. Live hardware readings require a locally connected device.*
+
 SUDARSHAN is an undergraduate engineering prototype exploring how different sensing technologies can be integrated into a common framework for spatial observation, angular response analysis and sensor-fusion-based processing. The project brings together GPS positioning, digital RF detection, infrared temperature sensing, inertial measurements and a dedicated engineering dashboard.
 
 The central idea behind SUDARSHAN is to move beyond viewing sensor outputs as isolated readings and investigate how they can be recorded, compared and represented together. The current prototype is an initial implementation of this broader concept, developed within the practical constraints of an academic engineering project.
